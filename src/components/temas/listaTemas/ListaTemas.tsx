@@ -5,6 +5,8 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import Tema from "../../../models/Tema";
 import { buscar } from "../../../services/Service";
 import CardTema from "../cardTemas/CardTemas";
+import 'react-toastify/dist/ReactToastify.css';
+import { toastAlerta } from "../../../util/toastAlerta";
 
 function ListaTemas() {
 
@@ -18,11 +20,13 @@ function ListaTemas() {
     async function buscarTemas() {
         try {
             await buscar('/temas', setTemas, {
-                headers: { Authorization: token }
+                headers: { _Authorization: token,
+
+ }
             })
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token Expirou!')
+                toastAlerta('O token Expirou!', "info")
                 handleLogout()
             }
         }
@@ -30,7 +34,7 @@ function ListaTemas() {
 
     useEffect(() => {
         if (token === '') {
-            alert('Você precisa estar logado!')
+            toastAlerta('Você precisa estar logado!', "info")
             navigate('/login')
         }
     }, [token])
@@ -69,3 +73,4 @@ function ListaTemas() {
 }
 
 export default ListaTemas;
+

@@ -3,6 +3,8 @@ import { cadastrarUsuario } from "../../services/Service"
 import { useNavigate } from "react-router-dom"
 import Usuario from "../../models/Usuario"
 import { RotatingLines } from "react-loader-spinner"
+import 'react-toastify/dist/ReactToastify.css';
+import { toastAlerta } from "../../util/toastAlerta"
 
 function Cadastro() {
 
@@ -68,27 +70,24 @@ function Cadastro() {
      e.preventDefault() // através do parametro E que representa um os eventos do Formulario, impedimos que o Form recarregue a página ao tentar enviar os dados
 
      // Verificamos se as senhas digitadas são iguais e se tem mais que 8 caracteres
-     if (confirmaSenha === usuario.senha && usuario.senha.length >= 8) {
+     if(confirmaSenha === usuario.senha && usuario.senha.length >= 8){
 
-         setIsLoading(true)// Muda o estado para verdadeiro, indicando que existe uma requisição sendo processada no back
-
-         try {    // Tenta fazer a requisição, e se houver erro impede que a aplicação pare
-             await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuario)    // Esperamos que a Service cadastrarUsuario() finalize a sua requisição
-
-             alert('Usuario cadastrado com sucesso!')    // Avisa ao usuário que deu bom
-         } catch (error) {
-             alert('Erro ao cadastrar o usuario!')    // Avisa ao usuário que deu erro
-         }
-     } else {
-         alert('Dados estão inconsistentes. Verifique as informações do cadastro')  // Se as senhas forem < do que 8 ou forem difernetes
-
-         setUsuario({ ...usuario, senha: '' })  // Reinicia o campo de Senha
-         setConfirmaSenha('')                   // Reinicia o campo de Confirmar Senha
+        setIsLoading(true)
+  
+        try{
+          await cadastrarUsuario(`/usuarios/cadastrar`, usuario, setUsuario)
+          toastAlerta('Usuário cadastrado com sucesso!', "sucesso")
+        }catch(error){
+          toastAlerta('Erro ao cadastrar o usuário!', "erro")
+        }
+      } else {
+        toastAlerta('Dados estão inconsistentes. Verifique as informações do cadastro', "erro")
+        setUsuario({...usuario, senha: ''})
+        setConfirmaSenha('')
+      }
+  
+      setIsLoading(false)
      }
-
-     setIsLoading(false)   // Muda o estado para falso, indicando a requisição já terminou de ser processada
- }
-
  return (
      <>
          <div className="grid grid-cols-1 lg:grid-cols-2 h-screen place-items-center font-bold">
@@ -186,3 +185,4 @@ function Cadastro() {
 }
 
 export default Cadastro
+
