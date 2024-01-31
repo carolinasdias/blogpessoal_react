@@ -1,7 +1,6 @@
 import Postagem from "./Postagem";
 
 export default interface Tema {
-    id: Number;
+    id: number;
     descricao: string;
-    portagem?: Postagem | null;
 }
